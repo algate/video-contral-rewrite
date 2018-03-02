@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Custom HTML5 Video Player</title>
+    <link rel="stylesheet" type="text/css" href="normalize.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="iconfont.css">
+</head>
+
+<body>
+    <div id="container" style="position: relative;background: #000; z-index: 0;overflow: hidden;font-size:0;" tabindex="0">
+        <div id="video_container">
+            <video preload poster="" style="width:100%;">
+                <!-- <source src="http://nettuts.s3.amazonaws.com/763_sammyJSIntro/trailer_test.mp4" type="video/mp4"> -->
+                <source src="/yingyong_720p.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div id="videoControls" class="player_control_bar skin_0 show">
+            <div id="play" class="player_control_bar_toggle player_control_bar_iconfont"></div>
+            <div id="progressText" style="font-size: 14px;line-height: 40px;color:#fff;float:left;">00:00</div>
+            <div id="progress" class="player_control_bar_progress">
+                <div id="play_progress" class="player_control_bar_progress_played"></div>
+                <div id="buffer_progress" class="player_control_bar_progress_buffer">
+                    <!-- <span></span> -->
+                </div>
+                <div id="progress_box" class="player_control_bar_click player_control_bar_candrag"></div>
+            </div>
+            <div id="progress_line" class="player_control_bar_hint">
+                <div class="player_control_bar_picture"></div>
+                <div id="progress_line_time" class="player_control_bar_hover_time">01:01</div>
+            </div>
+            <div class="audio-line">
+                <div class="audio-line-head player_control_bar_iconfont"></div>
+                <span class="audio-line-bar"><span class="audio-line-bar-volume"></span></span>
+            </div>
+            <div id="fullScreen" title="FullScreen Toggle" class="player_control_bar_fullscreen player_control_bar_iconfont"></div>
+            <!-- http://videojj.com -->
+            <a href="javascript:;" class="player_control_bar_logo" target="_blank" style="color:#fff;font-size:24px;"><i class="icon-youtube2"></i></a>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="js/videoplayer.js"></script>
+</html>
