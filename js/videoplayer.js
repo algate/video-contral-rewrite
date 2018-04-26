@@ -1,7 +1,6 @@
 (function(window, document) {
-    var video = document.getElementsByTagName('video')[0],
-    // var video,
-        videoContainer = document.getElementById('video_container'),
+    var videoContainer = document.getElementById('video_container'),
+        video = videoContainer.getElementsByTagName('video')[0],
         videoControls = document.getElementById('videoControls'),
         play = document.getElementById('play'),
         progressContainer = document.getElementById("progress"),
@@ -11,7 +10,12 @@
         progressLineTime = document.getElementById("progress_line_time"),
         progressText = document.getElementById('progressText'),
         bufferProgress = document.getElementById('buffer_progress'),
+        totalProgress = document.getElementById('progress_total'),
         fullScreenToggleButton = document.getElementById("fullScreen"),
+        videoVolumn = document.getElementById("videoVolumn"),
+        videoVolumnTotal = videoVolumn.getElementsByClassName("video_volumn_total")[0],
+        videoVolumnVolume = videoVolumn.getElementsByClassName("video_volumn_volume")[0],
+        volumnHolder = videoVolumn.getElementsByClassName("video_volumn_box")[0],
         // Boolean that allows us to "remember" the current size of the video player.
         isVideoFullScreen = false,
         playProgressInterval = null,
@@ -20,7 +24,7 @@
         init : function() {
             // this is equal to the videoPlayer object.
             var that = this;
-            this.addSource();
+            // this.addSource();
             // Helpful CSS trigger for JS.
             document.documentElement.className = 'js';
             // Get rid of the default controls, because we'll use our own.
@@ -48,18 +52,21 @@
                 }
             },false);
             this.handleButtonPresses();
+            // 进度条监听事件
+            this.videoScrubbing();
+            // volumn监听事件
+            this.videoVolumn();
             // When the full screen button is pressed...
             fullScreenToggleButton.addEventListener("click", function(){
                 isVideoFullScreen ? that.fullScreenOff() : that.fullScreenOn();
             }, true);
-            this.videoScrubbing();
         },
-        addSource: function(){
+        /*addSource: function(){
             window.URL = window.URL || window.webkitURL;
             window.MediaSource = window.MediaSource || window.WebKitMediaSource;
             var assetURL = '../yingyong_720p.mp4';
-            var assetURL_2 = '../yingyong_720p_2.mp4';
-            var assetURL2 = '../frag_bunny.mp4';
+            var assetURL2 = 'http://vpls.cdn.videojj.com/scene/movie/game/game04.mp4';
+            // var assetURL2 = '../frag_bunny.mp4';
             var assetURL3 = '../teacher.mp4';
             var assetURLnew = '../HTML5_history.mp4';
             var mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
@@ -77,7 +84,7 @@
               var mediaSource = this;
               // MediaSource 的 addSourceBuffer() 方法会根据给定的 MIME 类型创建一个新的 SourceBuffer 对象，然后会将它追加到 MediaSource 的 SourceBuffers 列表中。
               var sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
-              fetchAB(assetURLnew, function (buf) {
+              fetchAB(assetURL2, function (buf) {
                 console.log(buf);
                 // sourceBuffer.addEventListener('open',function(){
                     sourceBuffer.addEventListener('updateend', function () {
@@ -101,7 +108,7 @@
               };
               xhr.send();
             };
-        },
+        },*/
         /*addSource: function(){
             window.URL = window.URL || window.webkitURL;
             var assetURL = '../yingyong_720p.mp4';
@@ -142,7 +149,7 @@
             }
             xhr.send();
         },*/
-        /*addSource: function(){
+        addSource: function(){
             window.URL = window.URL || window.webkitURL;
             var assetURL = '../yingyong_720p.mp4';
             var assetURL2 = '../frag_bunny.mp4';
@@ -152,7 +159,7 @@
             var url = URL.createObjectURL(blob);
             console.log(url);
             video.src = url;
-        },*/
+        },
         /*readBlobAsDataURL: function(blob,callback){
             var a = new FileReader();
             a.onload = function(e) {callback(e.target.result);};
@@ -167,6 +174,7 @@
             return new Blob([u8arr], {type:mime});
         },*/
         videoBufferedProgress: function(){
+            console.log('video is downloading:', video.buffered);
             if(video.buffered.length){
                 var bufferPercent = video.buffered.end(0)/video.duration * 100;
                 bufferProgress.style.width = bufferPercent + '%';
@@ -174,11 +182,12 @@
         },
         initializeControls : function() {
             // When all meta information has loaded, show controls
+            console.log('all meta information has loaded, show controls');
             videoPlayer.showHideControls();
         },
         showHideControls : function() {
             // Shows and hides the video player.
-            /*video.addEventListener('mouseover', function() {
+            video.addEventListener('mouseover', function() {
                 videoControls.style.opacity = 1;
             }, false);
             videoControls.addEventListener('mouseover', function() {
@@ -189,7 +198,7 @@
             }, false);
             videoControls.addEventListener('mouseout', function() {
                 videoControls.style.opacity = 0;
-            }, false);*/
+            }, false);
         },
         handleButtonPresses : function() {
             // When the video or play button is clicked, play/pause the video.
@@ -212,7 +221,8 @@
             }, false);
             // When the video has concluded, pause it.
             video.addEventListener('ended', function() {
-                this.currentTime = 0; this.pause();
+                this.currentTime = 0;
+                this.pause();
             }, false);
         },
         playPause: function() {
@@ -228,24 +238,40 @@
         fullScreenOn : function() {
             isVideoFullScreen = true;
             // Set new width according to window width
-            video.style.cssText = 'background:#000;position: fixed; width:' + window.innerWidth + 'px; height: ' + window.innerHeight + 'px;';
+            // video.webkitRequestFullScreen();
+            // videoContainer.webkitRequestFullScreen();
+            function fullScreen(videoContainer) {
+                if (element.requestFullScreen) {
+                    element.requestFullScreen();
+                } else if (element.webkitRequestFullScreen) {
+                    element.webkitRequestFullScreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                }
+            }
+            videoContainer.style.cssText = 'position: fixed; width:100%; height:100%';
             // Apply a classname to the video and controls, if the designer needs it...
-            video.className = 'fullsizeVideo';
             videoControls.style.cssText = 'position: fixed;';
-            fullScreenToggleButton.classList.add("fs-active");
             fullScreenToggleButton.innerHTML = '';
-            console.log(fullScreenToggleButton.classList);
             console.log('full');
             // Listen for escape key. If pressed, close fullscreen.
             document.addEventListener('keydown', this.checkKeyCode, false);
         },
         fullScreenOff : function() {
             isVideoFullScreen = false;
-            video.style.position = 'static';
-            fullScreenToggleButton.classList.remove("fs-active");
+            // videoContainer.webkitcancelFullScreen();
+            function exitFullscreen() {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+            videoContainer.style.position = 'static';
             fullScreenToggleButton.innerHTML = '';
             console.log('unfull')
-            video.style.cssText = '';
             videoControls.style.cssText = '';
         },
         // Determines if the escape key was pressed.
@@ -270,6 +296,7 @@
             clearTimeout( playProgressInterval );
         },
         videoScrubbing : function() {
+            // 进度条多动操作
             /*progressHolder.addEventListener("mousedown", function(e){
                 videoPlayer.stopTrackingPlayProgress();
                 videoPlayer.playPause();
@@ -301,13 +328,40 @@
                 video.currentTime = currentLineTime;
                 videoPlayer.updatePlayProgress();
                 video.play();
-            })
+            });
         },
         setPlayProgress : function( clickX ) {
             progressLine.style.left = clickX - progressLine.offsetWidth/2 - videoControls.offsetLeft + 'px';
             var newPercent = (progressLine.offsetLeft - progressContainer.offsetLeft + progressLine.offsetWidth/2)/progressContainer.offsetWidth;
             currentLineTime = video.duration * newPercent;
             progressLineTime.innerHTML = videoPlayer.formatTime(currentLineTime).time2;
+        },
+        videoVolumn: function() {
+            video.volumn = 0.5;
+            videoVolumnVolume.style.width = '50%';
+            volumnHolder.addEventListener("mousedown", function(e){
+                video.volumn = e.offsetX/100;
+                videoVolumnVolume.style.width = video.volumn * 100 + '%';
+                volumnHolder.onmousemove = function(e) {
+                    video.volumn = e.offsetX/100;
+                    videoVolumnVolume.style.width = video.volumn * 100 + '%';
+                }
+                document.onmouseup = function(e) {
+                    document.onmouseup = null;
+                    document.onmousemove = null;
+                    volumnHolder.onmousemove = null;
+                }
+            }, true);
+            volumnHolder.addEventListener('mouseup', function(e){
+                volumnHolder.onmousemove = null;
+                volumnHolder.onmouseup = null;
+            });
+            volumnHolder.addEventListener('click',function(e){
+                console.log(e.offsetX);
+                console.log(video.volumn);
+                video.volumn = e.offsetX/100;
+                videoVolumnVolume.style.width = video.volumn * 100 + '%';
+            });
         },
         formatTime: function(timeStr){
             timeStr = Math.floor(timeStr*1000)

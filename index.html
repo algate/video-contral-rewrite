@@ -8,34 +8,31 @@
 </head>
 
 <body>
-    <div id="container" style="position: relative;background: #000; z-index: 0;overflow: hidden;font-size:0;" tabindex="0">
+    <div id="container">
         <div id="video_container">
-            <video preload poster="" style="width:100%;">
-                <!-- <source src="http://nettuts.s3.amazonaws.com/763_sammyJSIntro/trailer_test.mp4" type="video/mp4"> -->
-                <source src="/yingyong_720p.mp4" type="video/mp4">
-            </video>
-        </div>
-        <div id="videoControls" class="player_control_bar skin_0 show">
-            <div id="play" class="player_control_bar_toggle player_control_bar_iconfont"></div>
-            <div id="progressText" style="font-size: 14px;line-height: 40px;color:#fff;float:left;">00:00</div>
-            <div id="progress" class="player_control_bar_progress">
-                <div id="play_progress" class="player_control_bar_progress_played"></div>
-                <div id="buffer_progress" class="player_control_bar_progress_buffer">
-                    <!-- <span></span> -->
+            <video preload poster="" src="http://vpls.cdn.videojj.com/scene/movie/game/game04.mp4"></video>
+            <div id="videoControls" class="player_control">
+                <div id="play" class="player_control_play player_control_iconfont"></div>
+                <div id="progressText" class="play_control_pregressText">00:00</div>
+                <div id="progress" class="player_control_progress">
+                    <div id="progress_box" class="player_control_click"></div>
+                    <div id="play_progress" class="player_control_progress_played"></div>
+                    <div id="buffer_progress" class="player_control_progress_buffer"></div>
+                    <div id="progress_total" class="player_control_progress_total"></div>
                 </div>
-                <div id="progress_box" class="player_control_bar_click player_control_bar_candrag"></div>
+                <div id="progress_line" class="player_control_hint">
+                    <div id="progress_line_time" class="player_control_hover_time">00:00</div>
+                </div>
+                <div id="videoVolumn" class="video_volumn">
+                    <div class="video_volumn_head player_control_iconfont"></div>
+                    <span class="video_volumn_box"></span>
+                    <span class="video_volumn_total"><span class="video_volumn_volume"></span></span>
+                </div>
+                <div id="fullScreen" title="FullScreen Toggle" class="player_control_fullscreen player_control_iconfont"></div>
+                <a href="javascript:;" class="player_control_logo" target="_blank" style="color:#fff;font-size:24px;">
+                    <i class="icon-youtube2"></i>
+                </a>
             </div>
-            <div id="progress_line" class="player_control_bar_hint">
-                <div class="player_control_bar_picture"></div>
-                <div id="progress_line_time" class="player_control_bar_hover_time">01:01</div>
-            </div>
-            <div class="audio-line">
-                <div class="audio-line-head player_control_bar_iconfont"></div>
-                <span class="audio-line-bar"><span class="audio-line-bar-volume"></span></span>
-            </div>
-            <div id="fullScreen" title="FullScreen Toggle" class="player_control_bar_fullscreen player_control_bar_iconfont"></div>
-            <!-- http://videojj.com -->
-            <a href="javascript:;" class="player_control_bar_logo" target="_blank" style="color:#fff;font-size:24px;"><i class="icon-youtube2"></i></a>
         </div>
     </div>
 </body>
