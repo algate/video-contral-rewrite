@@ -17,8 +17,10 @@
         videoVolumnVolume = videoVolumn.getElementsByClassName("video_volumn_volume")[0],
         videoVolumnIcon = videoVolumn.getElementsByClassName("video_volumn_head")[0],
         volumnHolder = videoVolumn.getElementsByClassName("video_volumn_box")[0],
+        isVideoVolumnOn = true,
+        videoVolumnCur = 0,
         // Boolean that allows us to "remember" the current size of the video player.
-        isVideoFullScreen = false,
+        isVideoFullScreen = true,
         playProgressInterval = null,
         currentLineTime;
     var videoPlayer = {
@@ -351,6 +353,23 @@
                 videoVolumnVolume.style.width = video.volumn * 100 + '%';
                 videoPlayer.volumnIcon(video.volumn);
             });
+            videoVolumnIcon.addEventListener('click',function(){
+                console.log(isVideoVolumnOn, videoVolumnCur);
+                isVideoVolumnOn ? (() => {
+                    videoVolumnCur = video.volumn;
+                    video.volumn = 0;
+                    videoVolumnVolume.style.width = video.volumn * 100 + '%';
+                    videoPlayer.volumnIcon(0);
+                    isVideoVolumnOn = false;
+                    return;
+                })() : (() => {
+                    video.volumn = videoVolumnCur;
+                    videoVolumnVolume.style.width = video.volumn * 100 + '%';
+                    videoPlayer.volumnIcon(videoVolumnCur);
+                    isVideoVolumnOn = true;
+                    return;
+                })();
+            })
         },
         volumnIcon: function(volumn){
             if (volumn == 0) {
