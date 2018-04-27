@@ -20,7 +20,7 @@
         isVideoVolumnOn = true,
         videoVolumnCur = 0,
         // Boolean that allows us to "remember" the current size of the video player.
-        isVideoFullScreen = true,
+        isVideoFullScreen = false,
         playProgressInterval = null,
         currentLineTime;
     var videoPlayer = {
