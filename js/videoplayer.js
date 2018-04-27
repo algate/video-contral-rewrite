@@ -15,6 +15,7 @@
         videoVolumn = document.getElementById("videoVolumn"),
         videoVolumnTotal = videoVolumn.getElementsByClassName("video_volumn_total")[0],
         videoVolumnVolume = videoVolumn.getElementsByClassName("video_volumn_volume")[0],
+        videoVolumnIcon = videoVolumn.getElementsByClassName("video_volumn_head")[0],
         volumnHolder = videoVolumn.getElementsByClassName("video_volumn_box")[0],
         // Boolean that allows us to "remember" the current size of the video player.
         isVideoFullScreen = false,
@@ -24,7 +25,8 @@
         init : function() {
             // this is equal to the videoPlayer object.
             var that = this;
-            // this.addSource();
+            // this.addSource('../frag_bunny.mp4');
+            this.addSourceSrc('http://nettuts.s3.amazonaws.com/763_sammyJSIntro/trailer_test.mp4');
             // Helpful CSS trigger for JS.
             document.documentElement.className = 'js';
             // Get rid of the default controls, because we'll use our own.
@@ -109,16 +111,13 @@
               xhr.send();
             };
         },*/
-        /*addSource: function(){
+        addSourceSrc(assetURL) {
+            video.src = assetURL;
+        },
+        addSource: function(assetURL){
             window.URL = window.URL || window.webkitURL;
-            var assetURL = '../yingyong_720p.mp4';
-            var assetURL_2 = '../yingyong_720p_2.mp4';
-            var assetURL2 = '../frag_bunny.mp4';
-            var assetURL3 = '../teacher.mp4';
-            var assetURLnew = '../HTML5_history.mp4';
-            var assetURL4 = 'http://nettuts.s3.amazonaws.com/763_sammyJSIntro/trailer_test.mp4';
             var xhr = new XMLHttpRequest;
-            xhr.open('get', assetURLnew, true);
+            xhr.open('get', assetURL, true);
             xhr.responseType = 'blob';
             xhr.onload = function(){
                 console.log(this);
@@ -126,11 +125,11 @@
                     var blob = this.response;
                     console.log(blob);
                     var reader = new FileReader();
-                    reader.readAsArrayBuffer(blob);
+                    // reader.readAsArrayBuffer(blob);
                     // reader.readAsBinaryString(blob);
                     // reader.readAsDataURL(blob);
                     // reader.readAsText(blob);
-                    reader.addEventListener("loadend", function() {
+                    /*reader.addEventListener("loadend", function() {
                         // reader.result 包含转化为类型数组的blob
                         console.log(reader);
                         var arrayBuffer = reader.result;
@@ -139,7 +138,7 @@
                         console.log(dataView);
                         // 回归到了二进制语言，解析计算机语言 1 和 0 。只要你肯花功夫，我觉得你会成功的。
                         // var abc16str = String.fromCharCode.apply(null, new Uint16Array(dataView));
-                    });
+                    });*/
                     video.onload = function(e){
                         window.URL.revokeObjectURL(video.src);
                     }
@@ -148,8 +147,8 @@
                 }
             }
             xhr.send();
-        },*/
-        addSource: function(){
+        },
+        /*addSource: function(){
             window.URL = window.URL || window.webkitURL;
             var assetURL = '../yingyong_720p.mp4';
             var assetURL2 = '../frag_bunny.mp4';
@@ -159,19 +158,6 @@
             var url = URL.createObjectURL(blob);
             console.log(url);
             video.src = url;
-        },
-        /*readBlobAsDataURL: function(blob,callback){
-            var a = new FileReader();
-            a.onload = function(e) {callback(e.target.result);};
-            a.readAsDataURL(blob);
-        },*/
-        /*dataURLtoBlob: function(dataurl) {
-            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-            while(n--){
-                u8arr[n] = bstr.charCodeAt(n);
-            }
-            return new Blob([u8arr], {type:mime});
         },*/
         videoBufferedProgress: function(){
             console.log('video is downloading:', video.buffered);
@@ -208,7 +194,7 @@
             // switch to the "Pause" symbol.
             video.addEventListener('play', function() {
                 play.title = 'Pause';
-                play.innerHTML = '';
+                play.innerHTML = '&#xe6a5;';
                 // Begin tracking video's progress.
                 videoPlayer.trackPlayProgress();
             }, false);
@@ -216,7 +202,7 @@
             // switch to the "Play" symbol.
             video.addEventListener('pause', function() {
                 play.title = 'Play';
-                play.innerHTML = '';
+                play.innerHTML = '&#xe6a4;';
                 videoPlayer.stopTrackingPlayProgress();
             }, false);
             // When the video has concluded, pause it.
@@ -252,7 +238,8 @@
             videoContainer.style.cssText = 'position: fixed; width:100%; height:100%';
             // Apply a classname to the video and controls, if the designer needs it...
             videoControls.style.cssText = 'position: fixed;';
-            fullScreenToggleButton.innerHTML = '';
+            fullScreenToggleButton.innerHTML = '&#xeb8a;';
+            fullScreenToggleButton.title = '退出';
             console.log('full');
             // Listen for escape key. If pressed, close fullscreen.
             document.addEventListener('keydown', this.checkKeyCode, false);
@@ -270,7 +257,8 @@
                 }
             }
             videoContainer.style.position = 'static';
-            fullScreenToggleButton.innerHTML = '';
+            fullScreenToggleButton.innerHTML = '&#xe778;';
+            fullScreenToggleButton.title = '全屏';
             console.log('unfull')
             videoControls.style.cssText = '';
         },
@@ -342,9 +330,11 @@
             volumnHolder.addEventListener("mousedown", function(e){
                 video.volumn = e.offsetX/100;
                 videoVolumnVolume.style.width = video.volumn * 100 + '%';
+                videoPlayer.volumnIcon(video.volumn);
                 volumnHolder.onmousemove = function(e) {
                     video.volumn = e.offsetX/100;
                     videoVolumnVolume.style.width = video.volumn * 100 + '%';
+                    videoPlayer.volumnIcon(video.volumn);
                 }
                 document.onmouseup = function(e) {
                     document.onmouseup = null;
@@ -357,11 +347,24 @@
                 volumnHolder.onmouseup = null;
             });
             volumnHolder.addEventListener('click',function(e){
-                console.log(e.offsetX);
-                console.log(video.volumn);
                 video.volumn = e.offsetX/100;
                 videoVolumnVolume.style.width = video.volumn * 100 + '%';
+                videoPlayer.volumnIcon(video.volumn);
             });
+        },
+        volumnIcon: function(volumn){
+            if (volumn == 0) {
+                videoVolumnIcon.innerHTML = '&#xe634;'
+            } else if (0 < volumn && volumn <= 0.3) {
+                console.log(1, volumn);
+                videoVolumnIcon.innerHTML = '&#xe633;';
+            } else if (0.3 < volumn && volumn <= 0.6) {
+                console.log(2, volumn);
+                videoVolumnIcon.innerHTML = '&#xe632;';
+            } else if (0.6 < volumn && volumn <= 1) {
+                console.log(3, volumn);
+                videoVolumnIcon.innerHTML = '&#xe635;';
+            }
         },
         formatTime: function(timeStr){
             timeStr = Math.floor(timeStr*1000)
